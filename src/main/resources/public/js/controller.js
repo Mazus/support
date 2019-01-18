@@ -674,13 +674,20 @@ function SupportController($scope, template, model, route, $location, orderByFil
 	};
 	
 	$scope.getCategoryLabel = function(appAddress) {
-        var parts = appAddress.split(';');
 
-        var app = _.find($scope.apps, function (app) {
-            return app.address === parts[1];
-        });
+		if(appAddress.includes(';')) {
+            var parts = appAddress.split(';');
 
-        return lang.translate(parts[0]) + " - " + ((app !== undefined) ? app.displayName : undefined);
+            var appLabel = $scope.getCategoryLabel(parts[1]);
+
+            return lang.translate(parts[0]) + " - " + appLabel;
+		} else {
+            var app = _.find($scope.apps, function (app) {
+                return app.address === appAddress;
+            });
+
+            return (app !== undefined) ? app.displayName : undefined;
+        }
 	};
 	
 	$scope.getSchoolName = function(schoolId) {
