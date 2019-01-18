@@ -45,16 +45,32 @@ function SupportController($scope, template, model, route, $location, orderByFil
 		var apps = _.filter(model.me.apps, function(app) { 
 			return app.address && app.name && app.address.length > 0 && app.name.length > 0;
 		});
-		apps = _.map(apps, function(app){
-			app.displayName = lang.translate(app.displayName);
-			return app;
-		});
-		// Add category "Other"
-		var categoryOther = { address: 'support.category.other' };
-		categoryOther.displayName = lang.translate(categoryOther.address);
-		apps.push(categoryOther);
-		
-		$scope.apps = orderByFilter(apps, 'name');
+
+        $scope.apps = [];
+        model.mobileApplications(function (result) {
+            if (result && Array.isArray(result.mobileApplications)) {
+                result.mobileApplications.forEach(function (mobileApp) {
+                    var foundApp = _.findWhere(apps, {displayName: mobileApp});
+                    if (foundApp) {
+                        var newApp = _.extend({}, foundApp);
+                        newApp.address = "mobile;" + foundApp.address;
+                        newApp.displayName = lang.translate("mobile") + " - " + lang.translate(foundApp.displayName);
+                        $scope.apps.push(newApp);
+                    }
+                });
+            }
+        });
+
+        apps.forEach(function (app) {
+            $scope.apps.push(_.extend({}, app, {displayName: lang.translate(app.displayName)}));
+        });
+
+        // Add category "Other"
+        var categoryOther = {address: 'support.category.other'};
+        categoryOther.displayName = lang.translate(categoryOther.address);
+        $scope.apps.push(categoryOther);
+
+        $scope.apps = orderByFilter($scope.apps, 'name');
 
         $scope.notFound = false;
 		
@@ -658,11 +674,13 @@ function SupportController($scope, template, model, route, $location, orderByFil
 	};
 	
 	$scope.getCategoryLabel = function(appAddress) {
-		var app = _.find($scope.apps, function(app){
-			return app.address === appAddress;
-		});
-		var label = (app !== undefined) ? app.displayName : undefined;
-		return label;
+        var parts = appAddress.split(';');
+
+        var app = _.find($scope.apps, function (app) {
+            return app.address === parts[1];
+        });
+
+        return lang.translate(parts[0]) + " - " + ((app !== undefined) ? app.displayName : undefined);
 	};
 	
 	$scope.getSchoolName = function(schoolId) {

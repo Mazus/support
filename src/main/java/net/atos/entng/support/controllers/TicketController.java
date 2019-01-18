@@ -530,6 +530,14 @@ public class TicketController extends ControllerHelper {
         renderJson(request, result);
     }
 
+    @Get("/mobileapps")
+    @ApiDoc("Return the list of modules available on the mobile application.")
+    @SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+    public void getMobileApplications(final HttpServerRequest request) {
+        JsonObject result = new JsonObject().put("mobileApplications", Support.getMobileApplications());
+        renderJson(request, result);
+    }
+
     @BusAddress("support.update.bugtracker")
     @ApiDoc("Update ticket with information from bugtracker")
     public void updateTicketFromBugTracker(final Message<JsonObject> message) {

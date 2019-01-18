@@ -19,6 +19,7 @@
 
 package net.atos.entng.support;
 
+import io.vertx.core.json.JsonArray;
 import net.atos.entng.support.controllers.AttachmentController;
 import net.atos.entng.support.controllers.CommentController;
 import net.atos.entng.support.controllers.DisplayController;
@@ -40,12 +41,15 @@ import org.entcore.common.storage.impl.PostgresqlApplicationStorage;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 
+import java.util.List;
+
 
 public class Support extends BaseServer {
 
 	public final static String SUPPORT_NAME = "SUPPORT";
     private static boolean escalationActivated;
     public static boolean bugTrackerCommDirect;
+    public static JsonArray mobileApplications;
 
 	@Override
 	public void start() throws Exception {
@@ -78,6 +82,8 @@ public class Support extends BaseServer {
 						ticketServiceSql, userService, storage)
 				: null;
 
+		mobileApplications = config.getJsonArray("mobile-applications", new JsonArray());
+
         TicketController ticketController = new TicketController(ticketServiceSql, escalationService, userService, storage);
 		addController(ticketController);
 
@@ -98,6 +104,10 @@ public class Support extends BaseServer {
 
 	public static boolean escalationIsActivated() {
 		return escalationActivated;
+	}
+
+	public static JsonArray getMobileApplications() {
+		return mobileApplications;
 	}
 
 }

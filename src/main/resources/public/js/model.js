@@ -48,6 +48,14 @@ model.isEscalationActivated = function(callback){
 	}.bind(this));
 };
 
+model.mobileApplications = function (callback) {
+    http().get('/support/mobileapps').done(function (result) {
+        if (typeof callback === 'function') {
+            callback(result);
+        }
+    }.bind(this));
+};
+
 model.updateTicketStatus = function(itemArray, newStatus, cb, cbe){
     http().postJson('/support/ticketstatus/' + newStatus, {ids:model.getItemsIds(itemArray)}).done(function (result) {
         if(typeof cb === 'function'){
