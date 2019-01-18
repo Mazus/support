@@ -50,7 +50,7 @@ function SupportController($scope, template, model, route, $location, orderByFil
         model.mobileApplications(function (result) {
             if (result && Array.isArray(result.mobileApplications)) {
                 result.mobileApplications.forEach(function (mobileApp) {
-                    var foundApp = _.findWhere(apps, {displayName: mobileApp});
+                    var foundApp = _.findWhere(apps, {prefix: "/" + mobileApp});
                     if (foundApp) {
                         var newApp = _.extend({}, foundApp);
                         newApp.address = "mobile;" + foundApp.address;

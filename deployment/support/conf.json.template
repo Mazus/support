@@ -27,7 +27,7 @@
         "escalation-httpclient-maxpoolsize" : 16,
         "escalation-httpclient-keepalive" : false,
         "escalation-httpclient-tryusecompression" : true,
-        "mobile-applications" : ["actualites", "timeline", "support", "workspace", "messagerie", "blog", "pronote"],
+        "mobile-applications" : ["actualites", "timeline", "support", "workspace", "conversation", "blog", "pronote"],
         <% if (SupportBugTrackername != null && "PIVOT".equals(SupportBugTrackername)) { %>
          "user-iws-id" : "$SupportUserIwsId",
          "user-iws-name" : "$SupportUserIwsName",
